@@ -1,6 +1,6 @@
 from tortoise import Tortoise
 
-from app.database.models import User
+from bot.database.models import User
 
 
 class Database:

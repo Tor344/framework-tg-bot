@@ -2,12 +2,12 @@ import asyncio
 
 from aiogram import Bot, Dispatcher
 import config.settings as set
-from app.start.handlers import router as start_router
-from app.user.handlers import router as user_router
-from app.admin.handlers import router as admin_router
+from bot.app.start.handlers import router as start_router
+from bot.app.user.handlers import router as user_router
+from bot.app.admin.handlers import router as admin_router
 
 from config.logging_admin import loger
-from app.database.repository import db
+from bot.database import db
 
 
 bot = Bot(token=set.API_TOKEN)
