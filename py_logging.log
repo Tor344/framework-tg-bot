@@ -1,9 +1,0 @@
-2025-11-24 17:56:18,363 - tor - ERROR - Ошибка при запуске: Module "apps.database.models" not found
-2025-11-24 17:58:09,130 - tor - ERROR - Ошибка при запуске: Module "apps.database.models" not found
-2025-11-24 18:00:45,778 - tor - ERROR - Ошибка при запуске: Module "apps.database.models" not found
-2025-11-24 18:01:21,275 - tor - ERROR - Ошибка при запуске: Module "apps.database.models" not found
-2025-11-24 18:01:36,186 - tor - ERROR - Ошибка при запуске: Module "apps.database.models" not found
-2025-11-24 18:08:15,817 - tor - ERROR - Ошибка при запуске: Module "bot.apps.database.models" not found
-2025-11-24 18:09:01,672 - tor - ERROR - Ошибка при запуске: Module "bot.apps.database.models.py" not found
-2025-11-24 18:09:34,051 - tor - ERROR - Ошибка при запуске: Module "bot.apps.database.models" not found
-2025-11-24 18:09:51,328 - tor - ERROR - Ошибка при запуске: Module "models" not found
