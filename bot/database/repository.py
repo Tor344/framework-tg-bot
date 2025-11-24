@@ -9,14 +9,17 @@ class Database:
 
     async def connect(self) -> None:
         """Конектимся к базе"""
-        await Tortoise.init(db_url=self.db_url, modules={"models": ["app.database.models"]})
+        await Tortoise.init(db_url=self.db_url, modules={"models": ["bot.database.models"]})
         await Tortoise.generate_schemas()
 
     async def close(self):
         """Закрываем конект"""
         await Tortoise.close_connections()
 
-    async def add_user(self, user_id: int, user_name: str,age: int) -> None:
+
+
+class DB_users(Database):
+    async def add_user(self, user_id: int, user_name: str, age: int) -> None:
         """добавляем пользователя"""
         if not User.filter(id=user_id).exists():
             await User.create(id=user_id, user_name=user_name, age=age)
@@ -25,7 +28,7 @@ class Database:
         """получем данные пользователя"""
         return await User.get_or_none(id=user_id)
 
-    async def update_user(self,user_id: int, user_name: str, age: int) -> None:
+    async def update_user(self, user_id: int, user_name: str, age: int) -> None:
         """Изменяет или добавляет пользователя"""
         await User.update_or_create(id=user_id, user_name=user_name, age=age)
 
@@ -35,3 +38,5 @@ class Database:
 
 
 db = Database()
+
+db_users = DB_users()

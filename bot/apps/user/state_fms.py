@@ -1,4 +1,4 @@
 from aiogram.fsm.state import State,StatesGroup
 
-class StateFmsUser(StatesGroup):
+class User(StatesGroup):
     user = State()

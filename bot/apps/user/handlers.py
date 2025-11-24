@@ -6,4 +6,4 @@ router = Router()
 
 @router.message(Command("user"))
 async def user(message: Message):
-    pass
+    await message.answer("user")
