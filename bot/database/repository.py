@@ -1,42 +1,19 @@
-from tortoise import Tortoise
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
+from .models import User
 
-from bot.database.models import User
+class UserRepository:
+    def __init__(self, session: AsyncSession):
+        self.session = session
 
+    async def get_by_telegram_id(self, telegram_id: int) -> User | None:
+        result = await self.session.execute(
+            select(User).where(User.telegram_id == telegram_id)
+        )
+        return result.scalar_one_or_none()
 
-class Database:
-    def __init__(self, db_url: str = "sqlite://db.sqlite3") -> None:
-        self.db_url = db_url
-
-    async def connect(self) -> None:
-        """Конектимся к базе"""
-        await Tortoise.init(db_url=self.db_url, modules={"models": ["bot.database.models"]})
-        await Tortoise.generate_schemas()
-
-    async def close(self):
-        """Закрываем конект"""
-        await Tortoise.close_connections()
-
-
-
-class DB_users(Database):
-    async def add_user(self, user_id: int, user_name: str, age: int) -> None:
-        """добавляем пользователя"""
-        if not User.filter(id=user_id).exists():
-            await User.create(id=user_id, user_name=user_name, age=age)
-
-    async def get_user(self, user_id: int):
-        """получем данные пользователя"""
-        return await User.get_or_none(id=user_id)
-
-    async def update_user(self, user_id: int, user_name: str, age: int) -> None:
-        """Изменяет или добавляет пользователя"""
-        await User.update_or_create(id=user_id, user_name=user_name, age=age)
-
-    async def delete_user(self, user_id: int) -> bool:
-        """Удоляем пользователя True если удалили False если нет"""
-        return bool(await User.filter(user_id=user_id).delete())
-
-
-db = Database()
-
-db_users = DB_users()
+    async def create(self, telegram_id: int) -> User:
+        user = User(telegram_id=telegram_id)
+        self.session.add(user)
+        await self.session.commit()
+        return user
