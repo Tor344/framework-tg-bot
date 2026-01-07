@@ -1,0 +1,9 @@
+name: updata_restart.yml
+on: push
+
+jobs:
+  updata_restart:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Print name repositori
+        run: echo ${GITHUB_REPOSITORY##*/}
