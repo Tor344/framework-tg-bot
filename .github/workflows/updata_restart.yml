@@ -5,17 +5,15 @@ jobs:
   updata_restart:
     runs-on: ubuntu-22.04
     steps:
-      - name: print name repository
-        #updata project and restart
-        run: echo ${{ github.repository_name }}
-#        uses: appleboy/ssh-action@v1
-#        with:
-#          host: ${{ secrets.HOST }}
-#          username: ${{ secrets.USERNAME }}
-#          key: ${{ secrets.KEY }}
-#          script: |
-#            cd ${{ github.repository_name }}
-#            git pull
-#            sudo systemctl stop ${{ github.repository_name }}
-#            sudo systemctl daemon-reload
-#            sudo systemctl start ${{ github.repository_name }}
+      - name: update project and restart
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          script: |
+            cd ${GITHUB_REPOSITORY##*/} 
+            git pull
+            sudo systemctl stop ${GITHUB_REPOSITORY##*/} 
+            sudo systemctl daemon-reload
+            sudo systemctl start ${GITHUB_REPOSITORY##*/} 
