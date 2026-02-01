@@ -1,0 +1,19 @@
+from aiogram import Router
+from aiogram.types import Message
+from aiogram.filters import Command
+from sqlalchemy.ext.asyncio import AsyncSession
+
+import bot.core.keyboards as keyboards_core
+from bot.apps.{name} import keyboards as keyboards_{name}
+from bot.apps.{name}.state_fms import *
+
+from bot.database.repository import UserRepository
+
+router = Router()
+
+
+@router.message(Command("{name}"))
+async def {name}(message: Message, session: AsyncSession):
+    repo = UserRepository(session)
+
+    await message.answer("{name}")

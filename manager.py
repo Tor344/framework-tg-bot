@@ -5,36 +5,14 @@ import click
 
 PATH_APS = "bot/apps/"
 
-
-HANDLERS = """from aiogram import Router
-from aiogram.types import Message
-from aiogram.filters import Command
-
-router = Router()
-
-@router.message(Command("{name}"))
-async def {name}(message: Message):
-    await message.answer("{name}")
-"""
-
-KEYBOARD_HANDLERS = """from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup, KeyboardButton
-
-start_inline_keyboard = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="{name}",callback_data='{name}_inline_keyboard')]])
-
-start_keyboard = ReplyKeyboardMarkup(resize_keyboard=True,keyboard=[[KeyboardButton(text="{name}",callback_data='{name}_keyboard')]])
-"""
-
-STATE_FMS = """from aiogram.fsm.state import State,StatesGroup
-
-class {name_capitalize}(StatesGroup):
-    {name} = State()
-    """
 IMPORT_ROUTER = "from bot.apps.{name}.handlers import router as {name}_router"
 INCLUDE_ROUTER = "dp.include_router({name}_router)"
+
 
 @click.group()
 def cli():
     pass
+
 
 @cli.command()
 @click.argument('name', type=str)
@@ -45,9 +23,16 @@ def add_app(name:str):
         return
     path.mkdir(parents=True, exist_ok=True)
 
-    Path(path / "handlers.py").write_text(HANDLERS.format(name=name))
-    Path(path / "keyboards.py").write_text(KEYBOARD_HANDLERS.format(name=name))
-    Path(path / "state_fms.py").write_text(STATE_FMS.format(name_capitalize=name.capitalize(),name=name))
+    with open("templates/hendlers.txt","r") as hendlers_templates:
+        hendler_text = hendlers_templates.read()
+    with open("templates/keyboards.txt","r") as keyboards_templates:
+        keyboards = keyboards_templates.read()
+    with open("templates/state_fms.txt","r") as state_fms_templates:
+        state_fms = state_fms_templates.read()
+        
+    Path(path / "handlers.py").write_text(hendler_text.format(name=name))
+    Path(path / "keyboards.py").write_text(keyboards.format(name=name))
+    Path(path / "state_fms.py").write_text(state_fms.format(name_capitalize=name.capitalize(),name=name))
 
     main_strings = Path("main.py").read_text(encoding='utf-8').splitlines()
     main_strings.insert(4, IMPORT_ROUTER.format(name=name))

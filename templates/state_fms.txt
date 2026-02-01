@@ -1,0 +1,4 @@
+from aiogram.fsm.state import State,StatesGroup
+
+class {name_capitalize}(StatesGroup):
+    {name} = State()
