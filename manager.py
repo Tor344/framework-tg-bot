@@ -84,5 +84,24 @@ def install():
     click.echo("Установка systemctl выполнена")
 
 
+@cli.command()
+def uninstall():
+    name_project = str(Path(__file__).resolve().parent.name)
+    path_bot = Path(PATH_SYSYEMCTL + name_project + "_bot" + ".service" )
+    path_fast_api = Path(PATH_SYSYEMCTL + name_project + "_fast_api" + ".service" )
+    if not path_bot.exists():
+        click.echo(f"Файл {path_bot} ненайден")
+    else:    
+        shutil.rmtree(path_bot)
+
+    if not path_fast_api.exists():
+        click.echo(f"Файл {path_fast_api} ненайден")
+        return
+    else:
+        shutil.rmtree(path_fast_api)
+
+    click.echo("Удаление выполнено")
+
+
 if __name__ == '__main__':
     cli()
