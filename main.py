@@ -4,15 +4,14 @@ import logging
 
 from aiogram import Bot, Dispatcher
 
-import config.settings as set
 
-from bot.apps.user_click.handlers import router as user_click_router
 from bot.apps.start.handlers import router as start_router
-from bot.apps.user.handlers import router as user_router
-from bot.apps.admin.handlers import router as admin_router
 from bot.database.session import engine, Base
 import bot.database.models
 from bot.middlewares.db import DbSessionMiddleware
+
+import config.settings as set
+
 
 logging.basicConfig(
     level=logging.INFO,
@@ -22,15 +21,12 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
-bot = Bot(token=set.API_TOKEN)
+bot = Bot(token=set.BOT_TOKEN)
 
 dp = Dispatcher()
 
 dp.update.middleware(DbSessionMiddleware())
 
-dp.include_router(user_click_router)
-dp.include_router(user_router)
-dp.include_router(admin_router)
 dp.include_router(start_router)
 
 
