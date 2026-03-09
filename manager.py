@@ -1,7 +1,9 @@
+import os
 import shutil
 import pathlib
 from pathlib import Path
 import click
+import subprocess
 
 PATH_APS = "bot/apps/"
 
@@ -12,6 +14,20 @@ INCLUDE_ROUTER = "dp.include_router({name}_router)"
 @click.group()
 def cli():
     pass
+
+
+@cli.command()
+def start():
+    venv_python = os.path.join(".venv", "bin", "python")
+    venv_uvicorn = os.path.join(".venv", "bin", "uvicorn")
+
+    # Запуск обоих процессов в фоне
+    process1 = subprocess.Popen([venv_python, "main.py"])
+    process2 = subprocess.Popen([venv_uvicorn, "admin.app:app", "--host", "0.0.0.0", "--port", "8000"])
+
+    # Ожидание завершения обоих процессов (опционально)
+    process1.wait()
+    process2.wait()
 
 
 @cli.command()
