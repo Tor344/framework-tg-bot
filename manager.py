@@ -69,9 +69,7 @@ def install():
     name_project = str(Path(__file__).resolve().parent.name)
     path_bot = Path(PATH_SYSYEMCTL + name_project + "_bot" + ".service" )
     path_fast_api = Path(PATH_SYSYEMCTL + name_project + "_fast_api" + ".service" )
-    if path_bot.exists() or path_fast_api.exists():
-        click.echo("Файл уже существует")
-        return 
+
     
     with open("templates/project_bot.service.txt","r") as project_bot:
         project_bot_text = project_bot.read()
