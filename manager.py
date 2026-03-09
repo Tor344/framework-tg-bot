@@ -17,7 +17,6 @@ def cli():
 
 
 @cli.command()
-@click.argument()
 def start():
     venv_python = os.path.join(".venv", "bin", "python")
     venv_uvicorn = os.path.join(".venv", "bin", "uvicorn")
