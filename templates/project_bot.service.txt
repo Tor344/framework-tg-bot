@@ -7,9 +7,9 @@ Type=simple
 User=root
 Group=root
 WorkingDirectory=/root/{name_project}
-Environment=PATH=/root/{name_project}/venv/bin
+Environment=PATH=/root/{name_project}/.venv/bin
 Environment=PYTHONPATH=/root/{name_project}
-ExecStart=/root/{name_project}/venv/bin/python3 main.py
+ExecStart=/root/{name_project}/.venv/bin/python main.py
 Restart=always
 RestartSec=5
 StandardOutput=journal
