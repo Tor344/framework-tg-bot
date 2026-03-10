@@ -1,11 +1,15 @@
 import os
 import shutil
-import pathlib
 from pathlib import Path
+import subprocess
+import sys
+
 import click
 import subprocess
 
 PATH_APS = "bot/apps/"
+PATH_SYSYEMCTL = "/etc/systemd/system/"
+
 
 IMPORT_ROUTER = "from bot.apps.{name}.handlers import router as {name}_router"
 INCLUDE_ROUTER = "dp.include_router({name}_router)"
@@ -55,7 +59,7 @@ def start(token):
 @cli.command()
 @click.argument('name', type=str)
 def add_app(name:str):
-    path = pathlib.Path(PATH_APS + name)
+    path = Path(PATH_APS + name)
     if path.exists():
         click.echo("Файл уже существует")
         return
@@ -82,7 +86,7 @@ def add_app(name:str):
 @cli.command()
 @click.argument('name', type=str)
 def del_app(name:str):
-    path = pathlib.Path(PATH_APS + name)
+    path = Path(PATH_APS + name)
     if not path.exists():
         click.echo("Файл не найден")
         return
@@ -99,6 +103,69 @@ def del_app(name:str):
 
     Path("main.py").write_text('\n'.join(main_strings), encoding='utf-8')
 
+
+@cli.command()
+def install():
+    name_project = str(Path(__file__).resolve().parent.name)
+    path_bot = Path(PATH_SYSYEMCTL + name_project + "_bot" + ".service" )
+    path_fast_api = Path(PATH_SYSYEMCTL + name_project + "_fast_api" + ".service" )
+    venv_path = Path(".venv")
+
+    if not venv_path.exists():
+        click.echo("🔄 Создание виртуального окружения...")
+        try:
+            subprocess.run(
+                ['python3', '-m', 'venv', '.venv'],
+                check=True
+            )
+            subprocess.run(
+                ['.venv/bin/pip', 'install', '--upgrade', 'pip'],
+                check=True,
+                capture_output=True
+            )
+
+            # Устанавливаем зависимости
+            result = subprocess.run(
+                ['.venv/bin/pip', 'install', '-r', 'requirements.txt'],
+                check=True,
+                capture_output=True,
+                text=True
+            )
+            click.echo("✅ Виртуальное окружение создано")
+        except subprocess.CalledProcessError as e:
+            click.echo(f"❌ Ошибка при создании виртуального окружения: {e}", err=True)
+            sys.exit(1)
+    else:
+        click.echo("✅ Виртуальное окружение уже существует")
+    
+    with open("templates/project_bot.service.txt","r") as project_bot:
+        project_bot_text = project_bot.read()
+    with open("templates/project_fast_api.service.txt","r") as project_fast_api:
+        project_fast_api_text = project_fast_api.read()
+    
+    path_bot.write_text(project_bot_text.format(name_project=name_project))
+    path_fast_api.write_text(project_fast_api_text.format(name_project=name_project))
+    
+    click.echo("Установка systemctl выполнена")
+
+
+@cli.command()
+def uninstall():
+    name_project = str(Path(__file__).resolve().parent.name)
+    path_bot = Path(PATH_SYSYEMCTL + name_project + "_bot" + ".service" )
+    path_fast_api = Path(PATH_SYSYEMCTL + name_project + "_fast_api" + ".service" )
+    if not path_bot.exists():
+        click.echo(f"Файл {path_bot} ненайден")
+    else:    
+        shutil.rmtree(path_bot)
+
+    if not path_fast_api.exists():
+        click.echo(f"Файл {path_fast_api} ненайден")
+        return
+    else:
+        shutil.rmtree(path_fast_api)
+
+    click.echo("Удаление выполнено")
 
 
 if __name__ == '__main__':
