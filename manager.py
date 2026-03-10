@@ -1,7 +1,9 @@
 import shutil
 from pathlib import Path
-import click
+import subprocess
+import sys
 
+import click
 
 PATH_APS = "bot/apps/"
 PATH_SYSYEMCTL = "/etc/systemd/system/"
@@ -69,7 +71,34 @@ def install():
     name_project = str(Path(__file__).resolve().parent.name)
     path_bot = Path(PATH_SYSYEMCTL + name_project + "_bot" + ".service" )
     path_fast_api = Path(PATH_SYSYEMCTL + name_project + "_fast_api" + ".service" )
+    venv_path = Path(".venv")
 
+    if not venv_path.exists():
+        click.echo("🔄 Создание виртуального окружения...")
+        try:
+            subprocess.run(
+                ['python3', '-m', 'venv', '.venv'],
+                check=True
+            )
+            subprocess.run(
+                ['.venv/bin/pip', 'install', '--upgrade', 'pip'],
+                check=True,
+                capture_output=True
+            )
+
+            # Устанавливаем зависимости
+            result = subprocess.run(
+                ['.venv/bin/pip', 'install', '-r', 'requirements.txt'],
+                check=True,
+                capture_output=True,
+                text=True
+            )
+            click.echo("✅ Виртуальное окружение создано")
+        except subprocess.CalledProcessError as e:
+            click.echo(f"❌ Ошибка при создании виртуального окружения: {e}", err=True)
+            sys.exit(1)
+    else:
+        click.echo("✅ Виртуальное окружение уже существует")
     
     with open("templates/project_bot.service.txt","r") as project_bot:
         project_bot_text = project_bot.read()
