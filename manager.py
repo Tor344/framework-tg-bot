@@ -24,25 +24,25 @@ def cli():
 @click.option('--token', help='Имя пользователя')
 def start(token):
     env_file = "config/.env"
+    if token:
+        # Читаем существующие переменные
+        env_vars = {}
+        if os.path.exists(env_file):
+            with open(env_file, 'r') as f:
+                for line in f:
+                    if '=' in line:
+                        key, value = line.strip().split('=', 1)
+                        env_vars[key] = value
 
-    # Читаем существующие переменные
-    env_vars = {}
-    if os.path.exists(env_file):
-        with open(env_file, 'r') as f:
-            for line in f:
-                if '=' in line:
-                    key, value = line.strip().split('=', 1)
-                    env_vars[key] = value
+        # Обновляем токен
+        env_vars['BOT_TOKEN'] = f'"{token}"'
 
-    # Обновляем токен
-    env_vars['BOT_TOKEN'] = f'"{token}"'
+        # Записываем все обратно
+        with open(env_file, 'w') as f:
+            for key, value in env_vars.items():
+                f.write(f'{key}={value}\n')
 
-    # Записываем все обратно
-    with open(env_file, 'w') as f:
-        for key, value in env_vars.items():
-            f.write(f'{key}={value}\n')
-
-    print(f"✅ Токен обновлен в {env_file}")
+        print(f"✅ Токен обновлен в {env_file}")
 
     venv_python = os.path.join(".venv", "bin", "python")
     venv_uvicorn = os.path.join(".venv", "bin", "uvicorn")
