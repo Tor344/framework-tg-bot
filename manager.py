@@ -107,7 +107,7 @@ def del_app(name:str):
 @cli.command()
 def install():
     name_project = str(Path(__file__).resolve().parent.name)
-    path_bot = Path(PATH_SYSYEMCTL + name_project + "_bot" + ".service" )
+    path_bot = Path(PATH_SYSYEMCTL + name_project  + ".service" )
     path_fast_api = Path(PATH_SYSYEMCTL + name_project + "_fast_api" + ".service" )
     venv_path = Path(".venv")
 
