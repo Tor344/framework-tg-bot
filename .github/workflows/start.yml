@@ -1,14 +1,16 @@
 name: start project
+
 on: workflow_dispatch
+
 jobs:
-  stop_project:
+  start_project:
     runs-on: ubuntu-22.04
     steps:
       - name: start project
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.HOST }}
+          port: ${{ secrets.PORT }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }}
           script: sudo systemctl start ${GITHUB_REPOSITORY##*/}
-          

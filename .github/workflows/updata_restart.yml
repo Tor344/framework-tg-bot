@@ -1,4 +1,5 @@
 name: updata_restart.yml
+
 on: push
 
 jobs:
@@ -9,6 +10,7 @@ jobs:
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.HOST }}
+          port: ${{ secrets.PORT }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }}
           script: |
@@ -16,4 +18,4 @@ jobs:
             git pull
             sudo systemctl stop ${GITHUB_REPOSITORY##*/} 
             sudo systemctl daemon-reload
-            sudo systemctl start ${GITHUB_REPOSITORY##*/} 
+            sudo systemctl start ${GITHUB_REPOSITORY##*/}
