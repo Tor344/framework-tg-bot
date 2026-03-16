@@ -13,4 +13,6 @@ jobs:
           port: ${{ secrets.PORT }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }}
-          script: sudo systemctl stop ${GITHUB_REPOSITORY##*/}
+          script: |
+            SERVICE_NAME=$(basename $GITHUB_REPOSITORY)
+            sudo systemctl stop $SERVICE_NAME
