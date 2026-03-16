@@ -1,9 +1,10 @@
-name: updata_restart.yml
+name: update restart
 
-on: push
+on:
+  push:
 
 jobs:
-  updata_restart:
+  update_restart:
     runs-on: ubuntu-22.04
     steps:
       - name: update project and restart
@@ -14,8 +15,13 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }}
           script: |
-            cd ${GITHUB_REPOSITORY##*/} 
+            PROJECT=${{ github.event.repository.name }}
+            SERVICE=$PROJECT.service
+
+            echo "Updating project: $PROJECT"
+            cd $PROJECT
             git pull
-            sudo systemctl stop ${GITHUB_REPOSITORY##*/} 
-            sudo systemctl daemon-reload
-            sudo systemctl start ${GITHUB_REPOSITORY##*/}
+
+            echo "Restarting service: $SERVICE"
+            sudo systemctl restart $SERVICE
+            sudo systemctl status $SERVICE --no-pager

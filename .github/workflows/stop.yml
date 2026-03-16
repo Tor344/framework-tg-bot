@@ -15,4 +15,6 @@ jobs:
           key: ${{ secrets.KEY }}
           script: |
             SERVICE=${{ github.event.repository.name }}.service
-            sudo systemctl stop $SERVICE_NAME
+            echo "Stopping service: $SERVICE"
+            sudo systemctl stop $SERVICE
+            sudo systemctl status $SERVICE --no-pager
