@@ -152,7 +152,7 @@ def install():
 @cli.command()
 def uninstall():
     name_project = str(Path(__file__).resolve().parent.name)
-    path_bot = Path(PATH_SYSYEMCTL + name_project + "_bot" + ".service" )
+    path_bot = Path(PATH_SYSYEMCTL + name_project  + ".service" )
     path_fast_api = Path(PATH_SYSYEMCTL + name_project + "_fast_api" + ".service" )
     if not path_bot.exists():
         click.echo(f"Файл {path_bot} ненайден")
