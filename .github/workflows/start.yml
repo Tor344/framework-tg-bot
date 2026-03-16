@@ -15,4 +15,6 @@ jobs:
           key: ${{ secrets.KEY }}
           script: |
             SERVICE=${{ github.event.repository.name }}.service
-            sudo systemctl start $SERVICE_NAME
+            echo "Starting service: $SERVICE"
+            sudo systemctl start $SERVICE
+            sudo systemctl status $SERVICE --no-pager
